@@ -16,7 +16,7 @@ def main_pipeline(
     zip_input_files = [input_file for input_file in input_files if get_file_extention(input_file) in COMPRESSED_FILE_FORMATS]
     for input_file in zip_input_files:
         extract_zip(input_file, extracted_zips_folder)
-    core_pipeline(input_folder=extracted_zips_folder, output_folder=textual_folder, document_converter=document_converter)
+    #core_pipeline(input_folder=extracted_zips_folder, output_folder=textual_folder, document_converter=document_converter)
 
 
 
