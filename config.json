@@ -1,0 +1,6 @@
+{
+    "input_folder": "./data_clone/raw/scrapped_documents/",
+    "extracted_zips_folder": "./data_clone/raw/extracted_zips/",
+    "final_folder": "./data_clone/processed/final/",
+    "processed_images_folder": "./data_clone/processed/processed_images/"
+}
