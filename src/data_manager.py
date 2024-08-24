@@ -1,5 +1,31 @@
 import os
+import csv
 import zipfile
+
+
+def append_to_csv(extracted_info, csv_file_path):
+    """
+    Appends extracted information to an existing CSV file.
+
+    Args:
+        extracted_info (dict): A dictionary containing the extracted information.
+        csv_file_path (str): The path to the existing CSV file.
+    """
+
+    file_exists = os.path.isfile(csv_file_path)
+    # Extract keys for CSV headers and values for the CSV row
+    headers = extracted_info.keys()
+    row = extracted_info.values()
+
+    with open(csv_file_path, mode='a', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=headers)
+
+        # Write header if the file does not exist
+        if not file_exists:
+            writer.writeheader()
+
+        # Write the row
+        writer.writerow(extracted_info)
 
 def get_all_files(input_folder):
     """
@@ -34,3 +60,16 @@ def extract_zip(self, zip_path, extract_to):
     """
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         zip_ref.extractall(extract_to)
+
+
+if __name__ == '__main__':
+    extracted_info = {
+        "Objet de marché": "alfkj",
+        "Maître d'ouvrage": "sdfasdf",
+        "Journaux de publications": "sdfda sadf",
+        "Liste des concurrents": "X, Y",
+        "Montant TTC": "1,200,000 dh"
+    }
+    csv_file_path = './data_clone/extracted_info.csv'
+    append_to_csv(extracted_info, csv_file_path)
+    pass

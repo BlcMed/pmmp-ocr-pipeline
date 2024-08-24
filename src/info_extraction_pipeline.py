@@ -1,13 +1,12 @@
 import os
 import pandas as pd
 from openai import OpenAI
+import csv
+
 
 SYSTEM_ROLE_CONTENT = 'You are an expert data extraction assistant. Your task is to read text documents and accurately extract specific information.'
 api_key = ''
-
-client = OpenAI(
-    api_key=api_key
-)
+client = OpenAI(api_key=api_key)
 
 def extract_information_from_text(text, info_to_extract):
     # Create a dynamic prompt based on the info_to_extract list
@@ -26,7 +25,7 @@ def extract_information_from_text(text, info_to_extract):
     """
 
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[
             {"role": "system", "content": SYSTEM_ROLE_CONTENT},
             {"role": "user", "content": prompt}
@@ -47,7 +46,7 @@ def process_text_files(directory_path, info_to_extract):
                 text = file.read()
                 
             extracted_info = extract_information_from_text(text, info_to_extract)
-            extracted_info["File"] = filename  # Add the filename to keep track of the source
+            extracted_info["File"] = filename
             data.append(extracted_info)
     
     return pd.DataFrame(data)
@@ -59,3 +58,4 @@ if __name__ == '__main__':
     with open(file_path, 'r') as file:
         text = file.read()
     extracted_info = extract_information_from_text(text, info_to_extract) 
+    print(extracted_info)
