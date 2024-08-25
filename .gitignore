@@ -5,3 +5,4 @@ __pycache__/
 build/
 dist/
 textify_docs.egg_info/
+.env
