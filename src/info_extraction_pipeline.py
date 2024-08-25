@@ -1,17 +1,19 @@
 import os
 import pandas as pd
 from openai import OpenAI
-import csv
+from .data_manager import append_to_csv
+from dotenv import load_dotenv
 
-
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
 SYSTEM_ROLE_CONTENT = 'You are an expert data extraction assistant. Your task is to read text documents and accurately extract specific information.'
-api_key = ''
 client = OpenAI(api_key=api_key)
+CSV_FILE_PATH = './data_clone/extracted_info.csv'
 
-def extract_information_from_text(text, info_to_extract):
-    # Create a dynamic prompt based on the info_to_extract list
-    info_list_str = "\n".join([f"- {info}" for info in info_to_extract])
-    output_format = ", ".join([f"{info}: <{info.replace(' ', '_').lower()}>" for info in info_to_extract])
+def extract_information_from_text(text, extraction_fields):
+    # Create a dynamic prompt based on the extraction_fields
+    info_list_str = "\n".join([f"- {info}" for info in extraction_fields])
+    output_format = ", ".join([f"{info}: <{info.replace(' ', '_').lower()}>" for info in extraction_fields])
 
     prompt = f"""
     Extract the following information from the text:
@@ -32,24 +34,24 @@ def extract_information_from_text(text, info_to_extract):
         ]
     )
 
-    extracted_info = response.choices[0].message.content
-    return extracted_info
+    #extracted_info = response.choices[0].message.content
+    completion_text = response.choices[0].message.content.strip()
+    return parse_completion_to_dict(completion_text, extraction_fields)
 
 
-def process_text_files(directory_path, info_to_extract):
-    data = []
-    
-    for filename in os.listdir(directory_path):
-        if filename.endswith(".txt"):
-            file_path = os.path.join(directory_path, filename)
-            with open(file_path, 'r') as file:
-                text = file.read()
-                
-            extracted_info = extract_information_from_text(text, info_to_extract)
-            extracted_info["File"] = filename
-            data.append(extracted_info)
-    
-    return pd.DataFrame(data)
+def parse_completion_to_dict(completion_text, extraction_fields):
+    result = {}
+    for field in extraction_fields:
+        key = field.lower().replace(' ', '_')
+        # Look for the field in the completion text
+        start = completion_text.find(f"{field}:")
+        if start != -1:
+            start += len(f"{field}:")
+            end = completion_text.find(",", start)
+            result[key] = completion_text[start:end].strip()
+        else:
+            result[key] = None
+    return result
 
 
 if __name__ == '__main__':
@@ -58,4 +60,5 @@ if __name__ == '__main__':
     with open(file_path, 'r') as file:
         text = file.read()
     extracted_info = extract_information_from_text(text, info_to_extract) 
-    print(extracted_info)
+
+    append_to_csv(extracted_info=extracted_info, csv_file_path= CSV_FILE_PATH)
