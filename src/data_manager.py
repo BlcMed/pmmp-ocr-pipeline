@@ -3,27 +3,29 @@ import csv
 import zipfile
 
 
-def append_to_csv(extracted_info, csv_file_path):
+def append_to_csv(extracted_info, csv_file_path, file_path):
     """
-    Appends extracted information to an existing CSV file.
+    Appends extracted information to an existing CSV file, including the file name as a column.
 
     Args:
         extracted_info (dict): A dictionary containing the extracted information.
         csv_file_path (str): The path to the existing CSV file.
+        file_name (str): The name of the file from which the information was extracted.
     """
 
+    # Add the file path to the extracted information
+    extracted_info['file_path'] = file_path
+
+    # Check if the file exists to determine whether to write headers
     file_exists = os.path.isfile(csv_file_path)
-    # Extract keys for CSV headers and values for the CSV row
+    # Extract keys for CSV headers
     headers = extracted_info.keys()
-    row = extracted_info.values()
 
     with open(csv_file_path, mode='a', newline='', encoding='utf-8') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=headers)
-
         # Write header if the file does not exist
         if not file_exists:
             writer.writeheader()
-
         # Write the row
         writer.writerow(extracted_info)
 
@@ -71,5 +73,6 @@ if __name__ == '__main__':
         "Montant TTC": "1,200,000 dh"
     }
     csv_file_path = './data_clone/extracted_info.csv'
-    append_to_csv(extracted_info, csv_file_path)
+    file_path = "data/file_example.text"
+    append_to_csv(extracted_info, csv_file_path,file_path = file_path)
     pass

@@ -65,4 +65,4 @@ if __name__ == '__main__':
         text = file.read()
     extracted_info = extract_information_from_text(text, extraction_fields) 
 
-    append_to_csv(extracted_info=extracted_info, csv_file_path= csv_file_path)
+    append_to_csv(extracted_info=extracted_info, csv_file_path= csv_file_path,file_path=file_path)
