@@ -56,7 +56,7 @@ def save_text_to_file(text, output_folder,input_path):
             f.write(text)
 
 
-def extract_zip(self, zip_path, extract_to):
+def extract_zip(zip_path, extract_to):
     """
     Extract a ZIP file to a specified directory.
     """
@@ -75,4 +75,3 @@ if __name__ == '__main__':
     csv_file_path = './data_clone/extracted_info.csv'
     file_path = "data/file_example.text"
     append_to_csv(extracted_info, csv_file_path,file_path = file_path)
-    pass

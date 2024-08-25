@@ -39,7 +39,7 @@ requests==2.32.3
 safetensors==0.4.4
 six==1.16.0
 sympy==1.13.2
-textify-docs==1.0.0
+textify-docs==1.0.1
 timm==1.0.8
 tokenizers==0.19.1
 torch==2.4.0
