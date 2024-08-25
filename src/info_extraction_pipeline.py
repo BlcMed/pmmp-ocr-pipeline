@@ -81,11 +81,14 @@ if __name__ == '__main__':
     from .config import load_config
     config = load_config('config.json')
     extraction_fields = config["EXTRACTION_FIELDS"]
+    textual_folder = config["TEXTUAL_FOLDER"]
     csv_file_path = config["CSV_FILE_PATH"]
     system_role_content = config["SYSTEM_ROLE_CONTENT"]
 
-    with open(file_path, 'r') as file:
-        text = file.read()
-    extracted_info = extract_information_from_text(text, extraction_fields, client=client) 
 
-    append_to_csv(extracted_info=extracted_info, csv_file_path= csv_file_path,file_path=file_path)
+    info_extraction_pipeline(textual_folder=textual_folder,extraction_fields=extraction_fields,csv_file_path=csv_file_path,api_key=api_key,system_role_content=system_role_content)
+    #with open(file_path, 'r') as file:
+    #    text = file.read()
+    #extracted_info = extract_information_from_text(text, extraction_fields, client=client) 
+
+    #append_to_csv(extracted_info=extracted_info, csv_file_path= csv_file_path,file_path=file_path)
