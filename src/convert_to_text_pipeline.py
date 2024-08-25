@@ -2,9 +2,6 @@ from textify_docs.document_converter import DocumentConverter
 from .data_manager import *
 
 
-#SUPPORTED_FILE_FORMATS=['docx','.pdf', '.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.xls', '.xlsx']
-#COMPRESSED_FILE_FORMATS = ['.zip']
-
 def main_pipeline(
     input_folder,
     extracted_zips_folder,
@@ -20,7 +17,6 @@ def main_pipeline(
     for input_file in zip_input_files:
         extract_zip(input_file, extracted_zips_folder)
     #core_pipeline(input_folder=extracted_zips_folder, output_folder=textual_folder, document_converter=document_converter)
-
 
 
 def core_pipeline(

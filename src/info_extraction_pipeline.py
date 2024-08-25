@@ -1,16 +1,14 @@
 import os
-import pandas as pd
 from openai import OpenAI
-from .data_manager import append_to_csv
-from dotenv import load_dotenv
+from .data_manager import append_to_csv, get_all_files
+#from dotenv import load_dotenv
 
-load_dotenv()
-api_key = os.getenv("OPENAI_API_KEY")
-#SYSTEM_ROLE_CONTENT = 'You are an expert data extraction assistant. Your task is to read text documents and accurately extract specific information.'
-#CSV_FILE_PATH = './data_clone/extracted_info.csv'
-client = OpenAI(api_key=api_key)
 
-def extract_information_from_text(text, extraction_fields, system_role_content):
+def load_openai_client(api_key):
+    client = OpenAI(api_key=api_key)
+    return client
+
+def extract_information_from_text(text, extraction_fields, system_role_content, client):
     # Create a dynamic prompt based on the extraction_fields
     info_list_str = "\n".join([f"- {info}" for info in extraction_fields])
     output_format = ", ".join([f"{info}: <{info.replace(' ', '_').lower()}>" for info in extraction_fields])
@@ -54,8 +52,13 @@ def _parse_completion_to_dict(completion_text, extraction_fields):
 
 
 if __name__ == '__main__':
+    from dotenv import load_dotenv
+    load_dotenv()
+    api_key = os.getenv("OPENAI_API_KEY")
+    client = load_openai_client(api_key=api_key)
+
     file_path = "./data_clone/textual/48-24.txt"
-    # extraction_fields = ["Objet de marché", "Maître d'ouvrage", "Journaux de publications", "Liste des concurrents", "Montant TTC"]
+
     from .config import load_config
     config = load_config('config.json')
     extraction_fields = config["EXTRACTION_FIELDS"]
@@ -63,6 +66,6 @@ if __name__ == '__main__':
 
     with open(file_path, 'r') as file:
         text = file.read()
-    extracted_info = extract_information_from_text(text, extraction_fields) 
+    extracted_info = extract_information_from_text(text, extraction_fields, client=client) 
 
     append_to_csv(extracted_info=extracted_info, csv_file_path= csv_file_path,file_path=file_path)
