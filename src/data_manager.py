@@ -1,6 +1,27 @@
 import csv
 import os
 import zipfile
+import json
+import logging
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+
+def save_dict_to_json(data: dict, json_folder_path, file_path: str):
+    """
+    Saves a dictionary to a JSON file.
+    """
+    file_name = get_file_name(file_path)
+    json_file_path = os.path.join(json_folder_path, file_name + ".json")
+
+    try:
+        with open(json_file_path, "w", encoding="utf-8") as json_file:
+            json.dump(data, json_file, ensure_ascii=False, indent=4)
+        logging.info("Dictionary saved to %s", json_file_path)
+    except Exception as e:
+        logging.error(f"Error saving to JSON: {e}")
 
 
 def append_to_csv(extracted_info, csv_file_path: str, file_path: str):
@@ -9,8 +30,6 @@ def append_to_csv(extracted_info, csv_file_path: str, file_path: str):
 
     Args:
         extracted_info (dict): A dictionary containing the extracted information.
-        csv_file_path (str): The path to the existing CSV file.
-        file_name (str): The name of the file from which the information was extracted.
     """
 
     # Add the file path to the extracted information
@@ -48,15 +67,23 @@ def get_file_extention(input_path):
     return file_extension
 
 
+def get_file_name(file_path):
+    file_name = os.path.splitext(os.path.basename(file_path))[0]
+    return file_name
+
+
 def save_text_to_file(text: str, output_folder: str, input_path: str):
     """
     Save text to a file in the specified folder.
     """
-    filename = os.path.splitext(input_path)[0]
-    base_filename = os.path.basename(filename)
-    output_path = os.path.join(output_folder, f"{base_filename}.txt")
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(text)
+    try:
+        filename = os.path.splitext(input_path)[0]
+        base_filename = os.path.basename(filename)
+        output_path = os.path.join(output_folder, f"{base_filename}.txt")
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(text)
+    except Exception as e:
+        print(f"Error saving text to file: {e}")
 
 
 def extract_zip(zip_path, extract_to):
@@ -75,6 +102,8 @@ if __name__ == "__main__":
         "Liste des concurrents": "X, Y",
         "Montant TTC": "1,200,000 dh",
     }
-    csv_file_path = "./data_clone/extracted_info.csv"
-    file_path = "data/file_example.text"
-    append_to_csv(extracted_info, csv_file_path, file_path=file_path)
+    csv_file_path = "./data/extracted_info_test.csv"
+    file_path = "root_test/test/test_file.txt"
+
+    # append_to_csv(extracted_info, csv_file_path, file_path=file_path)
+    save_dict_to_json(extracted_info, "./data/", file_path)

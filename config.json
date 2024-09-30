@@ -1,10 +1,34 @@
 {
-    "INPUT_FOLDER": "./data_clone/raw/scrapped_documents/",
-    "EXTRACTED_ZIPS_FOLDER": "./data_clone/raw/extracted_zips/",
-    "TEXTUAL_FOLDER": "./data_clone/textual",
-    "CSV_FILE_PATH" : "./data_clone/extracted_info.csv",
-    "SUPPORTED_FILE_FORMATS" : ["docx",".pdf", ".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".xls", ".xlsx"],
-    "COMPRESSED_FILE_FORMATS" : [".zip"],
-    "SYSTEM_ROLE_CONTENT" : "You are an expert data extraction assistant. Your task is to read text documents and accurately extract specific information.",
-    "EXTRACTION_FIELDS" : ["Objet de marché", "Maître d'ouvrage", "Journaux de publications", "Liste des concurrents", "Montant TTC"]
+    "INPUT_FOLDER": "./data/raw/scrapped_documents/",
+    "EXTRACTED_ZIPS_FOLDER": "./data/raw/extracted_zips/",
+    "TEXTUAL_FOLDER": "./data/textual",
+    "CSV_FILE_PATH": "./data/extracted_info.csv",
+    "JSON_FOLDER_PATH": "./data/json/",
+    "SUPPORTED_FILE_FORMATS": [
+        "docx",
+        ".pdf",
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".bmp",
+        ".tiff",
+        ".xls",
+        ".xlsx"
+    ],
+    "COMPRESSED_FILE_FORMATS": [
+        ".zip"
+    ],
+    "SYSTEM_ROLE_CONTENT": "You are an expert data extraction assistant. Your task is to read text documents and accurately extract specific information.",
+    "EXTRACTION_FIELDS": [
+        "Objet de marché",
+        "Maître d'ouvrage",
+        "date de publication des marches publics",
+        "date d'ouverture des plis",
+        "date d'achevement des travaux de la comission",
+        "Journaux de publications",
+        "Liste des concurrents admissible",
+        "Liste des concurrents retenu",
+        "Liste des concurrents infractueux",
+        "Montant TTC"
+    ]
 }

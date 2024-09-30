@@ -4,14 +4,14 @@ from typing import Any, Dict
 from dotenv import load_dotenv
 from groq import Groq
 
-from .data_manager import append_to_csv, get_all_files
+from .data_manager import append_to_csv, get_all_files, save_dict_to_json
 
 load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY")
 
 
 def info_extraction_pipeline(
-    textual_folder, extraction_fields, csv_file_path, api_key, system_role_content
+    textual_folder, extraction_fields, api_key, csv_file_path, json_folder_path
 ):
     client = Groq(
         api_key=api_key,
@@ -22,8 +22,9 @@ def info_extraction_pipeline(
             with open(file_path, "r", encoding="utf-8") as f:
                 text = f.read()
             extracted_info = extract_information_from_text(
-                text, extraction_fields, system_role_content, client=client
+                text, extraction_fields, client=client
             )
+            save_dict_to_json(extracted_info, json_folder_path, file_path)
             append_to_csv(extracted_info, csv_file_path, file_path)
 
 
@@ -48,9 +49,9 @@ def extract_information_from_text(
         ],
     )
     completion_text = response.choices[0].message.content.strip()
-    print(f"completion_text: {completion_text}")
+    # print(f"completion_text: {completion_text}")
     results = _parse_completion_to_dict(completion_text, extraction_fields)
-    print(f"rsults: {results}")
+    # print(f"rsults: {results}")
     return results
 
 
@@ -74,7 +75,6 @@ def generate_prompt(extraction_fields: list[str], text: str) -> str:
     {text}
 
     """
-    print(f"prompt: {prompt}")
     return prompt
 
 
@@ -101,26 +101,16 @@ if __name__ == "__main__":
     extraction_fields = config["EXTRACTION_FIELDS"]
     textual_folder = config["TEXTUAL_FOLDER"]
     csv_file_path = config["CSV_FILE_PATH"]
-    system_role_content = config["SYSTEM_ROLE_CONTENT"]
+    json_folder_path = config["JSON_FOLDER_PATH"]
+    # file_path = "./data/textual/48-24.txt"
+    # client = Groq(api_key=groq_api_key)
+    # extracted_info = extract_information_from_text(text, extraction_fields, client=client)
+    # append_to_csv(extracted_info=extracted_info, csv_file_path= csv_file_path,file_path=file_path)
 
-    file_path = "./data_clone/textual/48-24.txt"
-    with open(file_path, "r") as file:
-        text = file.read()
-
-    client = Groq(
-        api_key=groq_api_key,
-    )
-    extracted_info = extract_information_from_text(
-        text, extraction_fields, client=client
-    )
-
-    """
     info_extraction_pipeline(
         textual_folder=textual_folder,
         extraction_fields=extraction_fields,
+        api_key=groq_api_key,
         csv_file_path=csv_file_path,
-        api_key=api_key,
-        system_role_content=system_role_content,
+        json_folder_path=json_folder_path,
     )
-    """
-    # append_to_csv(extracted_info=extracted_info, csv_file_path= csv_file_path,file_path=file_path)
