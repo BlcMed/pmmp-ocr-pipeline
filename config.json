@@ -1,9 +1,10 @@
 {
-    "INPUT_FOLDER": "./data/raw/scrapped_documents/",
-    "EXTRACTED_ZIPS_FOLDER": "./data/raw/extracted_zips/",
-    "TEXTUAL_FOLDER": "./data/textual",
+    "INPUT_FOLDER_PATH": "./data/raw/scrapped_documents/",
+    "EXTRACTED_ZIPS_FOLDER_PATH": "./data/raw/extracted_zips/",
+    "TEXTUAL_FOLDER_PATH": "./data/textual",
     "CSV_FILE_PATH": "./data/extracted_info.csv",
     "JSON_FOLDER_PATH": "./data/json/",
+    "LOG_FOLDER_PATH": "./logs/",
     "SUPPORTED_FILE_FORMATS": [
         "docx",
         ".pdf",
@@ -18,6 +19,7 @@
     "COMPRESSED_FILE_FORMATS": [
         ".zip"
     ],
+    "MODEL_NAME": "llama3-8b-8192",
     "SYSTEM_ROLE_CONTENT": "You are an expert data extraction assistant. Your task is to read text documents and accurately extract specific information.",
     "EXTRACTION_FIELDS": [
         "Objet de marché",

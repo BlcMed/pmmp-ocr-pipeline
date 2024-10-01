@@ -1,8 +1,8 @@
 import csv
-import os
-import zipfile
 import json
 import logging
+import os
+import zipfile
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -13,7 +13,7 @@ def save_dict_to_json(data: dict, json_folder_path, file_path: str):
     """
     Saves a dictionary to a JSON file.
     """
-    file_name = get_file_name(file_path)
+    file_name = _get_file_name(file_path)
     json_file_path = os.path.join(json_folder_path, file_name + ".json")
 
     try:
@@ -40,18 +40,20 @@ def append_to_csv(extracted_info, csv_file_path: str, file_path: str):
     # Extract keys for CSV headers
     headers = extracted_info.keys()
 
-    with open(csv_file_path, mode="a", newline="", encoding="utf-8") as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=headers)
-        # Write header if the file does not exist
-        if not file_exists:
-            writer.writeheader()
-        # Write the row
-        writer.writerow(extracted_info)
+    try:
+        with open(csv_file_path, mode="a", newline="", encoding="utf-8") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=headers)
+            if not file_exists:
+                writer.writeheader()
+            writer.writerow(extracted_info)
+        logging.info(f"Appended extracted info from {file_path} to {csv_file_path}")
+    except Exception as e:
+        logging.error(f"Error writing to CSV: {e}")
 
 
 def get_all_files(input_folder):
     """
-    get all file names in a folder
+    Get all file names in a folder
     """
     file_paths = []
     for root, dirs, files in os.walk(input_folder):
@@ -61,13 +63,16 @@ def get_all_files(input_folder):
     return file_paths
 
 
-def get_file_extention(input_path):
+def get_file_extention(input_path: str) -> str:
     _, file_extension = os.path.splitext(input_path)
     file_extension = file_extension.lower()
     return file_extension
 
 
-def get_file_name(file_path):
+def _get_file_name(file_path: str) -> str:
+    """
+    Get the base name (without extension) of a file.
+    """
     file_name = os.path.splitext(os.path.basename(file_path))[0]
     return file_name
 
@@ -77,21 +82,28 @@ def save_text_to_file(text: str, output_folder: str, input_path: str):
     Save text to a file in the specified folder.
     """
     try:
-        filename = os.path.splitext(input_path)[0]
-        base_filename = os.path.basename(filename)
+        base_filename = _get_file_name(input_path)
         output_path = os.path.join(output_folder, f"{base_filename}.txt")
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(text)
     except Exception as e:
         print(f"Error saving text to file: {e}")
 
+        logging.info(f"Text saved to {output_path}")
+    except Exception as e:
+        logging.error(f"Error saving text to file: {e}")
+
 
 def extract_zip(zip_path, extract_to):
     """
     Extract a ZIP file to a specified directory.
     """
-    with zipfile.ZipFile(zip_path, "r") as zip_ref:
-        zip_ref.extractall(extract_to)
+    try:
+        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            zip_ref.extractall(extract_to)
+        logging.info(f"Extracted {zip_path} to {extract_to}")
+    except Exception as e:
+        logging.error(f"Error extracting zip file {zip_path}: {e}")
 
 
 if __name__ == "__main__":

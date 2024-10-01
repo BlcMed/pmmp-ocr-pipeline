@@ -7,8 +7,16 @@ def load_config(config_file="config.json") -> Dict:
     """
     Load configuration settings from a JSON file.
 
+    Args:
+        config_file (str): Path to the configuration file. Default is "config.json".
+
     Returns:
-        dict: Configuration settings.
+        Dict[str, any]: Configuration settings as a dictionary.
+
+    Raises:
+        FileNotFoundError: If the configuration file does not exist.Args:
+        config_file (str): Path to the configuration file. Default is "config.json".
+
     """
     config_path = Path(config_file)
     if not config_path.exists():
