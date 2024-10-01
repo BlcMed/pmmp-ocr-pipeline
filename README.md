@@ -1,5 +1,4 @@
-# Data Transformation Pipeline for Portail Marocain des Marchés Publics
-
+# ETL for Portail Marocain des Marchés Publics
 ![Pipeline Overview](assets/pipeline_overview.png)
 
 This project focuses on transforming raw data sourced from the *Portail Marocain des Marchés Publics* (process verbals des appel d'offres) into structured data ready for analysis. The pipeline consists of several stages, utilizing various tools and libraries, including the **Textify Docs** library for text extraction and processing.
@@ -47,7 +46,7 @@ The final output is structured data in JSON format, ready for analysis or furthe
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/yourproject.git
+   git clone https://github.com/BlcMed/pmmp-ocr-pipeline.git
    cd yourproject
    ```
 2. Install the required packages:
