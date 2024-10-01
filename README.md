@@ -82,4 +82,4 @@ Ensure that the `.env` file is properly configured before running any pipeline.
 Contributions are welcome! Please feel free to submit a pull request or open an issue.
 
 ## References
-- [Textify Docs](https://github.com/yourusername/textify-docs): Another library in this GitHub repository used for text extraction and processing.
+- [Textify Docs](https://github.com/BlcMed/textify_docs): Another library in this GitHub repository used for text extraction and processing.
