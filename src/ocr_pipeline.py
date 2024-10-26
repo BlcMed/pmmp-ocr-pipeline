@@ -5,7 +5,7 @@ from textify_docs.document_converter import DocumentConverter
 
 from .config import load_config
 from .data_manager import (
-    _get_file_extention,
+    get_file_extention,
     extract_zip,
     get_all_files,
     save_text_to_file,
@@ -42,7 +42,7 @@ def main_OCR_pipeline(
     zip_input_files = [
         input_file
         for input_file in input_files
-        if _get_file_extention(input_file) in compressed_file_formats
+        if get_file_extention(input_file) in compressed_file_formats
     ]
     logging.info(f"Found {len(zip_input_files)} compressed files to extract.")
     for input_file in zip_input_files:
@@ -65,7 +65,7 @@ def core_OCR_pipeline(
     logging.info(f"Found {len(input_files)} files in {input_folder}")
 
     for input_file in input_files:
-        file_extention = _get_file_extention(input_file)
+        file_extention = get_file_extention(input_file)
         if file_extention in supported_file_formats:
             logging.info(f"Converting {input_file} to text...")
             try:
