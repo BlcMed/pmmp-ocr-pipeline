@@ -1,8 +1,7 @@
-venv/
+*venv/
 data/
-data_clone/
 __pycache__/
-build/
-dist/
-textify_docs.egg_info/
 .env
+*logs/
+airflow.db
+webserver_config.py
