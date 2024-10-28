@@ -15,7 +15,6 @@ logging.basicConfig(
 
 def scraping_pipeline():
     logging.info("Scraping pipeline started")
-    pass
 
 
 if __name__ == "__main__":
