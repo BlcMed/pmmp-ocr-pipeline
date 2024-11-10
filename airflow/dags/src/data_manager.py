@@ -9,11 +9,47 @@ logging.basicConfig(
 )
 
 
+def load_miniO(input_folder):
+    logging.info(f"Loading from {input_folder}")
+    input_files = get_all_files(input_folder=input_folder)
+    return input_files
+
+
+def save_miniO(content, path, object_name):
+    try:
+        full_path = os.path.join(path, object_name)
+        with open(full_path, "w", encoding="utf-8") as f:
+            f.write(content)
+    except Exception as e:
+        logging.error(f"Error saving text to file: {e}")
+
+
+def save_text_to_file(text: str, output_folder: str, input_path: str):
+    """
+    Save text to a file in the specified folder.
+    """
+    try:
+        base_filename = get_file_name(input_path)
+        output_path = os.path.join(output_folder, f"{base_filename}.txt")
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(text)
+    except Exception as e:
+        print(f"Error saving text to file: {e}")
+
+        logging.info(f"Text saved to {output_path}")
+    except Exception as e:
+        logging.error(f"Error saving text to file: {e}")
+
+
+def save_postgresql(structured_data):
+    print("saving in postgresql ...")
+
+
 def save_dict_to_json(data: dict, json_folder_path, file_path: str):
     """
     Saves a dictionary to a JSON file.
     """
-    file_name = _get_file_name(file_path)
+    file_name = get_file_name(file_path)
     json_file_path = os.path.join(json_folder_path, file_name + ".json")
 
     try:
@@ -69,29 +105,12 @@ def get_file_extention(input_path: str) -> str:
     return file_extension
 
 
-def _get_file_name(file_path: str) -> str:
+def get_file_name(file_path: str) -> str:
     """
     Get the base name (without extension) of a file.
     """
     file_name = os.path.splitext(os.path.basename(file_path))[0]
     return file_name
-
-
-def save_text_to_file(text: str, output_folder: str, input_path: str):
-    """
-    Save text to a file in the specified folder.
-    """
-    try:
-        base_filename = _get_file_name(input_path)
-        output_path = os.path.join(output_folder, f"{base_filename}.txt")
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(text)
-    except Exception as e:
-        print(f"Error saving text to file: {e}")
-
-        logging.info(f"Text saved to {output_path}")
-    except Exception as e:
-        logging.error(f"Error saving text to file: {e}")
 
 
 def extract_zip(zip_path, extract_to):
