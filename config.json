@@ -5,6 +5,7 @@
     "CSV_FILE_PATH": "./data/extracted_info.csv",
     "JSON_FOLDER_PATH": "./data/json/",
     "LOG_FOLDER_PATH": "./logs/",
+    "SCRIPTS_FOLDER_PATH": "./scripts/",
     "SUPPORTED_FILE_FORMATS": [
         "docx",
         ".pdf",
@@ -32,5 +33,17 @@
         "Liste des concurrents retenu",
         "Liste des concurrents infractueux",
         "Montant TTC"
+    ],
+    "SQL_TABLE_FIELDS": [
+        { "name": "objet_de_marche", "type": "VARCHAR(255)" },
+        { "name": "maitre_d_ouvrage", "type": "VARCHAR(255)" },
+        { "name": "date_publication_marches_publics", "type": "DATE" },
+        { "name": "date_ouverture_plis", "type": "DATE" },
+        { "name": "date_achevement_commission_travaux", "type": "DATE" },
+        { "name": "journaux_publications", "type": "TEXT" },
+        { "name": "liste_concurrents_admissible", "type": "TEXT" },
+        { "name": "liste_concurrents_retenu", "type": "TEXT" },
+        { "name": "liste_concurrents_infractueux", "type": "TEXT" },
+        { "name": "montant_ttc", "type": "NUMERIC" }
     ]
 }
