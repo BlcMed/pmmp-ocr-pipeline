@@ -14,4 +14,6 @@ fi
 echo "Running SQL script to set up the database and user..."
 sudo -u postgres psql -f "$SQL_FILE"
 
+sudo apt install libpq-dev
+
 echo "PostgreSQL database and user for Airflow have been created successfully."
