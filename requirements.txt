@@ -1,5 +1,6 @@
 apache-airflow==2.10.2
-psycopg2-binary==2.9.10
+apache-airflow-providers-postgres==5.14.0
+psycopg2==2.9.10
 python-dotenv==1.0.1
 wheel==0.37.1
 git+https://github.com/BlcMed/textify_docs.git@main

@@ -3,9 +3,17 @@ import json
 import logging
 import os
 import zipfile
+from typing import Any, Dict
+from airflow.providers.postgres.hooks.postgres import PostgresHook
+from .config import load_config
 
+config = load_config("config.json")
+
+log_file = os.path.join(config["LOG_FOLDER_PATH"], "data_management.log")
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
 )
 
 
@@ -41,8 +49,18 @@ def save_text_to_file(text: str, output_folder: str, input_path: str):
         logging.error(f"Error saving text to file: {e}")
 
 
-def save_postgresql(structured_data):
-    print("saving in postgresql ...")
+def save_postgresql(data: Dict[str, Any], postgres_conn_id, table_name):
+    postgres_hook = PostgresHook(postgres_conn_id=postgres_conn_id)
+    columns = ", ".join(data.keys())
+    placeholders = ", ".join(["%s"] * len(data))
+    values = tuple(data.values())
+
+    sql = f"""
+        INSERT INTO {table_name} ({columns})
+        VALUES ({placeholders});
+    """
+    postgres_hook.run(sql, autocommit=True, parameters=values)
+    logging.dubug(f"Saving 1 row in {table_name}...")
 
 
 def save_dict_to_json(data: dict, json_folder_path, file_path: str):
@@ -127,14 +145,12 @@ def extract_zip(zip_path, extract_to):
 
 if __name__ == "__main__":
     extracted_info = {
-        "Objet de marché": "alfkj",
-        "Maître d'ouvrage": "sdfasdf",
-        "Journaux de publications": "sdfda sadf",
-        "Liste des concurrents": "X, Y",
-        "Montant TTC": "1,200,000 dh",
+        "objet_de_marche": "alfkj",
+        "maitre_d_ouvrage": "sdfasdf",
+        "date_publication_marches_publics": "sdfda sadf",
     }
-    csv_file_path = "./data/extracted_info_test.csv"
-    file_path = "root_test/test/test_file.txt"
-
+    # csv_file_path = "./data/extracted_info_test.csv"
+    # file_path = "root_test/test/test_file.txt"
     # append_to_csv(extracted_info, csv_file_path, file_path=file_path)
-    save_dict_to_json(extracted_info, "./data/", file_path)
+    # save_dict_to_json(extracted_info, "./datDefaulting to user installation because normal site-packages is not writeable meaning in pip pythona/", file_path)
+    save_postgresql(data=extracted_info)
