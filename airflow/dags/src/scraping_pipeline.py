@@ -1,5 +1,6 @@
 import logging
 import os
+from .data_manager import save_miniO
 
 from .config import load_config
 
@@ -13,9 +14,12 @@ logging.basicConfig(
 )
 
 
-def scraping_pipeline():
+def scrape_documents():
     logging.info("Scraping pipeline started")
+    documents = []
+    logging.info("Scraping pipeline finished")
+    save_miniO(documents, path="", object_name="")
 
 
 if __name__ == "__main__":
-    scraping_pipeline()
+    scrape_documents()

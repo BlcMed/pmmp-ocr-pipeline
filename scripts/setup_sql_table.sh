@@ -17,6 +17,9 @@ fi
 
 echo "Executing SQL file '$SQL_FILE_PATH' on database '$DB_NAME'..."
 
+cat $SQL_FILE_PATH
+
+export PGPASSWORD='airflow_pass'
 sudo -u postgres psql -d "$DB_NAME" -U "$DB_USER" -f "$SQL_FILE_PATH"
 
 if [ $? -eq 0 ]; then
