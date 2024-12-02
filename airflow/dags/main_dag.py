@@ -1,33 +1,29 @@
 from datetime import datetime
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from src.scraping_pipeline import scraping_pipeline
-from airflow.decorators import task_group
+from src.scraping_pipeline import scrape_documents
+from src.info_extraction_pipeline import info_extraction_pipeline
+from src.ocr_pipeline import textualize
+import os
+from dotenv import load_dotenv
+
+from src.config import load_config
+
+config = load_config("config.json")
+
+extraction_fields = config["EXTRACTION_FIELDS"]
+json_folder_path = config["JSON_FOLDER_PATH"]
+model_name = config["MODEL_NAME"]
+input_folder = config["INPUT_FOLDER_PATH"]
+extracted_zips_folder = config["EXTRACTED_ZIPS_FOLDER_PATH"]
+textual_folder = config["TEXTUAL_FOLDER_PATH"]
+csv_file_path = config["CSV_FILE_PATH"]
+supported_file_formats = config["SUPPORTED_FILE_FORMATS"]
+compressed_file_formats = config["COMPRESSED_FILE_FORMATS"]
 
 
-def scraping():
-    scraping_pipeline()
-    print("start scraping ...")
-
-
-def textualize():
-    print("textualisation ...")
-
-
-def info_extraction():
-    print("info_extraction LLM ...")
-
-
-def load_miniO():
-    print("loading in miniO ...")
-
-
-def save_miniO():
-    print("saving in miniO ...")
-
-
-def save_postgresql():
-    print("saving in postgresql ...")
+load_dotenv()
+groq_api_key = os.getenv("GROQ_API_KEY")
 
 
 with DAG(
@@ -37,38 +33,19 @@ with DAG(
     catchup=False,
 ) as dag:
 
-    @task_group(group_id="scraping_task_group")
-    def scraping_task():
-        task1 = PythonOperator(
-            task_id="scraping_task",
-            python_callable=scraping,
-        )
-        task2 = PythonOperator(task_id="staging_pdf_task", python_callable=save_miniO)
+    task1 = PythonOperator(
+        task_id="scraping_task",
+        python_callable=scrape_documents,
+    )
 
-        task1 >> task2
+    task2 = PythonOperator(
+        task_id="textualize_task",
+        python_callable=textualize,
+    )
 
-    @task_group(group_id="textualization_task_group")
-    def textualization():
-        task3 = PythonOperator(task_id="loading_pdf_task", python_callable=load_miniO)
-        task4 = PythonOperator(
-            task_id="textualize",
-            python_callable=textualize,
-        )
-        task5 = PythonOperator(task_id="staging_text_task", python_callable=save_miniO)
+    task3 = PythonOperator(
+        task_id="extract_information_with_llm",
+        python_callable=info_extraction_pipeline,
+    )
 
-        task3 >> task4 >> task5
-
-    @task_group(group_id="info_extraction_task_group")
-    def information_extraction():
-        task6 = PythonOperator(task_id="loading_pdf_task", python_callable=load_miniO)
-        task7 = PythonOperator(
-            task_id="extract_information_with_llm",
-            python_callable=info_extraction,
-        )
-        task8 = PythonOperator(
-            task_id="sacing_structured_info", python_callable=save_postgresql
-        )
-
-        task6 >> task7 >> task8
-
-    scraping_task() >> textualization() >> information_extraction()
+    task1 >> task2 >> task3
